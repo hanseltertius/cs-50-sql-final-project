@@ -2,6 +2,7 @@
 PRAGMA foreign_keys = ON;
 
 -- CREATE TABLE
+-- Create customers table
 CREATE TABLE IF NOT EXISTS "customers" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "identity_no" INTEGER UNIQUE NOT NULL,
@@ -13,6 +14,7 @@ CREATE TABLE IF NOT EXISTS "customers" (
     "deleted" INTEGER CHECK ("deleted" IN (0, 1))
 );
 
+-- Create shops table
 CREATE TABLE IF NOT EXISTS "shops" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
@@ -22,11 +24,13 @@ CREATE TABLE IF NOT EXISTS "shops" (
     "status" TEXT CHECK ("status" IN ('active', 'on renovation', 'closed'))
 );
 
+-- Create positions table
 CREATE TABLE IF NOT EXISTS "positions" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL
 );
 
+-- Create employees table
 CREATE TABLE IF NOT EXISTS "employees" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "shop_id" INTEGER NOT NULL,
@@ -42,12 +46,14 @@ CREATE TABLE IF NOT EXISTS "employees" (
     FOREIGN KEY ("position_id") REFERENCES "positions"("id")
 );
 
+-- Create brands table
 CREATE TABLE IF NOT EXISTS "brands" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "name" TEXT UNIQUE NOT NULL,
     "status" TEXT NOT NULL CHECK ("status" IN ('active', 'inactive'))
 );
 
+-- Create products table
 CREATE TABLE IF NOT EXISTS "products" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "brand_id" INTEGER NOT NULL,
@@ -57,6 +63,7 @@ CREATE TABLE IF NOT EXISTS "products" (
     FOREIGN KEY ("brand_id") REFERENCES "brands"("id")
 );
 
+-- Create inventories table
 CREATE TABLE IF NOT EXISTS "inventories" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "shop_id" INTEGER NOT NULL,
@@ -67,6 +74,7 @@ CREATE TABLE IF NOT EXISTS "inventories" (
     FOREIGN KEY ("product_id") REFERENCES "products"("id")
 );
 
+-- Create orders table
 CREATE TABLE IF NOT EXISTS "orders" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "shop_id" INTEGER NOT NULL,
@@ -81,6 +89,7 @@ CREATE TABLE IF NOT EXISTS "orders" (
     FOREIGN KEY ("customer_id") REFERENCES "customers"("id")
 );
 
+-- Create items table
 CREATE TABLE IF NOT EXISTS "items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "order_id" INTEGER NOT NULL,
@@ -92,21 +101,25 @@ CREATE TABLE IF NOT EXISTS "items" (
 );
 
 -- CREATE VIEW
+-- To create view of active customers
 CREATE VIEW IF NOT EXISTS "active_customers" AS
 SELECT "id", "identity_no", "first_name", "last_name"
 FROM "customers"
 WHERE "deleted" = 0;
 
+-- To create view of active employees
 CREATE VIEW IF NOT EXISTS "active_employees" AS
 SELECT "id", "shop_id", "position_id", "first_name", "last_name", "join_date"
 FROM "employees"
 WHERE "resigned" = 0;
 
+-- To create view of active shops
 CREATE VIEW IF NOT EXISTS "active_shops" AS
 SELECT "id", "name", "address", "phone_number", "email"
 FROM "shops"
 WHERE "status" = 'active';
 
+-- To create view of active inventory details
 CREATE VIEW IF NOT EXISTS "active_inventory_details" AS
 SELECT 
 "inventories"."id", "brands"."name" AS "brand_name", 
@@ -118,6 +131,7 @@ JOIN "products" ON "products"."id" = "inventories"."product_id"
 JOIN "brands" ON "brands"."id" = "products"."brand_id"
 WHERE "inventories"."stock" > 0;
 
+-- To create view of invoices
 CREATE VIEW IF NOT EXISTS "invoices" AS
 SELECT 
 "orders"."id", "orders"."date" AS "order_date", "orders"."number" AS "order_number",

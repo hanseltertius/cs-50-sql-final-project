@@ -92,6 +92,47 @@ CREATE TABLE IF NOT EXISTS "items" (
 );
 
 -- CREATE VIEW
+CREATE VIEW IF NOT EXISTS "active_customers" AS
+SELECT "id", "identity_no", "first_name", "last_name"
+FROM "customers"
+WHERE "deleted" = 0;
+
+CREATE VIEW IF NOT EXISTS "active_employees" AS
+SELECT "id", "shop_id", "position_id", "first_name", "last_name", "join_date"
+FROM "employees"
+WHERE "resigned" = 0;
+
+CREATE VIEW IF NOT EXISTS "active_shops" AS
+SELECT "id", "name", "address", "phone_number", "email"
+FROM "shops"
+WHERE "status" = 'active';
+
+CREATE VIEW IF NOT EXISTS "active_inventory_details" AS
+SELECT 
+"inventories"."id", "brands"."name" AS "brand_name", 
+"products"."name" AS "product_name",
+"products"."price" AS "product_price", "inventories"."size", "inventories"."stock" 
+FROM "inventories"
+JOIN "shops" ON "shops"."id" = "inventories"."shop_id"
+JOIN "products" ON "products"."id" = "inventories"."product_id"
+JOIN "brands" ON "brands"."id" = "products"."brand_id"
+WHERE "inventories"."stock" > 0;
+
+CREATE VIEW IF NOT EXISTS "invoices" AS
+SELECT 
+"orders"."id", "orders"."date" AS "order_date", "orders"."number" AS "order_number",
+"shops"."name" AS "shop_name", "employees"."first_name" AS "employee_first_name",
+"employees"."last_name" AS "employee_last_name", "customers"."first_name" AS "customer_first_name",
+"customers"."last_name" AS "customer_last_name", "brands"."name" AS "brand_name",
+"products"."name" AS "product_name", "items"."quantity", "items"."total_price"
+FROM "orders"
+JOIN "shops" ON "shops"."id" = "orders"."shop_id"
+JOIN "employees" ON "employees"."id" = "orders"."employee_id"
+JOIN "customers" ON "customers"."id" = "orders"."customer_id"
+JOIN "items" ON "orders"."id" = "items"."order_id"
+JOIN "inventories" ON "inventories"."id" = "items"."inventory_id"
+JOIN "products" ON "products"."id" = "inventories"."product_id"
+JOIN "brands" ON "brands"."id" = "products"."brand_id";
 
 -- CREATE INDEX
 

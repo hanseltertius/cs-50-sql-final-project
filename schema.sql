@@ -151,6 +151,10 @@ JOIN "inventories" ON "inventories"."id" = "items"."inventory_id"
 JOIN "products" ON "products"."id" = "inventories"."product_id"
 JOIN "brands" ON "brands"."id" = "products"."brand_id";
 
+-- To create view of maximum id for order
+CREATE VIEW IF NOT EXISTS "maximum_order_id" AS
+SELECT MAX("id") AS "id" FROM "orders";
+
 -- CREATE INDEX
 
 -- CREATE TRIGGER

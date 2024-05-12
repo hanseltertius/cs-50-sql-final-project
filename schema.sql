@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS "customers" (
     "address" TEXT NOT NULL,
     "phone_number" TEXT,
     "email" TEXT CHECK ("email" LIKE '%_@_%._%'),
-    "deleted" INTEGER CHECK ("deleted" IN (0, 1))
+    "deleted" INTEGER CHECK ("deleted" IN (0, 1)) DEFAULT 0
 );
 
 -- Create shops table
@@ -35,13 +35,14 @@ CREATE TABLE IF NOT EXISTS "employees" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "shop_id" INTEGER NOT NULL,
     "position_id" INTEGER NOT NULL,
+    "identity_no" INTEGER UNIQUE NOT NULL,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT,
     "address" TEXT NOT NULL,
     "phone_number" TEXT,
     "email" TEXT CHECK ("email" LIKE '%_@_%._%'),
     "join_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "resigned" INTEGER CHECK ("resigned" IN (0, 1)),
+    "resigned" INTEGER CHECK ("resigned" IN (0, 1)) DEFAULT 0,
     FOREIGN KEY ("shop_id") REFERENCES "shops"("id"),
     FOREIGN KEY ("position_id") REFERENCES "positions"("id")
 );
@@ -69,7 +70,7 @@ CREATE TABLE IF NOT EXISTS "inventories" (
     "shop_id" INTEGER NOT NULL,
     "product_id" INTEGER NOT NULL,
     "size" NUMERIC NOT NULL CHECK ("size" BETWEEN 30 AND 55),
-    "stock" INTEGER NOT NULL CHECK ("stock" >= 0),
+    "stock" INTEGER NOT NULL CHECK ("stock" >= 0) DEFAULT 0,
     FOREIGN KEY ("shop_id") REFERENCES "shops"("id"),
     FOREIGN KEY ("product_id") REFERENCES "products"("id")
 );
@@ -124,7 +125,8 @@ CREATE VIEW IF NOT EXISTS "active_inventory_details" AS
 SELECT 
 "inventories"."id", "brands"."name" AS "brand_name", 
 "products"."name" AS "product_name",
-"products"."price" AS "product_price", "inventories"."size", "inventories"."stock" 
+ROUND("products"."price", 2) AS "product_price", 
+"inventories"."size", "inventories"."stock" 
 FROM "inventories"
 JOIN "shops" ON "shops"."id" = "inventories"."shop_id"
 JOIN "products" ON "products"."id" = "inventories"."product_id"
@@ -138,7 +140,8 @@ SELECT
 "shops"."name" AS "shop_name", "employees"."first_name" AS "employee_first_name",
 "employees"."last_name" AS "employee_last_name", "customers"."first_name" AS "customer_first_name",
 "customers"."last_name" AS "customer_last_name", "brands"."name" AS "brand_name",
-"products"."name" AS "product_name", "items"."quantity", "items"."total_price"
+"products"."name" AS "product_name", "items"."quantity", 
+ROUND("items"."total_price", 2) AS "total_price"
 FROM "orders"
 JOIN "shops" ON "shops"."id" = "orders"."shop_id"
 JOIN "employees" ON "employees"."id" = "orders"."employee_id"

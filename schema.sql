@@ -154,3 +154,161 @@ JOIN "brands" ON "brands"."id" = "products"."brand_id";
 -- CREATE INDEX
 
 -- CREATE TRIGGER
+-- Create trigger when trying to delete active customers
+CREATE TRIGGER IF NOT EXISTS "delete_active_customers"
+INSTEAD OF DELETE ON "active_customers"
+FOR EACH ROW
+BEGIN
+    UPDATE "customers" SET "deleted" = 1 WHERE "id" = OLD."id";
+END;
+
+-- Create trigger when trying to insert into active customer where identity no exists
+CREATE TRIGGER IF NOT EXISTS "insert_active_customers_when_exists"
+INSTEAD OF INSERT ON "active_customers"
+FOR EACH ROW
+    WHEN NEW."identity_no" IN (
+        SELECT "identity_no" FROM "customers"
+    )
+BEGIN
+    UPDATE "customers" SET "deleted" = 0 WHERE "identity_no" = NEW."identity_no";
+END;
+
+-- Create trigger when trying to insert into active customer where identity no does not exist
+CREATE TRIGGER IF NOT EXISTS "insert_active_customers_when_not_exists"
+INSTEAD OF INSERT ON "active_customers"
+FOR EACH ROW
+    WHEN NEW."identity_no" NOT IN (
+        SELECT "identity_no" FROM "customers"
+    )
+BEGIN
+    INSERT INTO "customers" ("identity_no", "first_name", "last_name", "address", "phone_number", "email")
+    VALUES (NEW."identity_no", NEW."first_name", NEW."last_name", NEW."address", NEW."phone_number", NEW."email");
+END;
+
+-- Create trigger when trying to delete active employees
+CREATE TRIGGER IF NOT EXISTS "delete_active_employees"
+INSTEAD OF DELETE ON "active_employees"
+FOR EACH ROW
+BEGIN
+    UPDATE "employees" SET "resigned" = 1 WHERE "id" = OLD."id";
+END;
+
+-- Create trigger when trying to insert active employees where identity no exists
+CREATE TRIGGER IF NOT EXISTS "insert_active_employees_when_exists"
+INSTEAD OF INSERT ON "active_employees"
+FOR EACH ROW
+    WHEN NEW."identity_no" IN (
+        SELECT "identity_no" FROM "employees"
+    )
+BEGIN
+    UPDATE "employees" SET "resigned" = 0 WHERE "identity_no" = NEW."identity_no";
+END;
+
+-- Create trigger when trying to insert active employees where identity no does not exist
+CREATE TRIGGER IF NOT EXISTS "insert_active_employees_when_not_exists"
+INSTEAD OF INSERT ON "active_employees"
+FOR EACH ROW
+    WHEN NEW."identity_no" NOT IN (
+        SELECT "identity_no" FROM "employees"
+    )
+BEGIN
+    INSERT INTO "employees" ("shop_id", "position_id", "identity_no", "first_name", "last_name", "address", "phone_number", "email", "join_date")
+    VALUES (NEW."shop_id", NEW."position_id", NEW."identity_no", NEW."first_name", NEW."last_name", NEW."address", NEW."phone_number", NEW."email", NEW."join_date");
+END;
+
+-- Create trigger when trying to insert employee into inactive shop
+CREATE TRIGGER IF NOT EXISTS "insert_employee_into_inactive_shop"
+BEFORE INSERT ON "employees"
+FOR EACH ROW
+    WHEN NEW."shop_id" IN (
+        SELECT "id" FROM "shops" WHERE "status" <> 'active'
+    )
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add new employee to inactive shop');
+END;
+
+-- Create trigger when trying to insert order into inactive shop
+CREATE TRIGGER IF NOT EXISTS "insert_order_into_inactive_shop"
+BEFORE INSERT ON "shops"
+FOR EACH ROW
+    WHEN NEW."shop_id" IN (
+        SELECT "id" FROM "shops" WHERE "status" <> 'active'
+    )
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add new order to inactive shop');
+END;
+
+-- Create trigger when trying to insert an item where quantity exceed stock
+CREATE TRIGGER IF NOT EXISTS "insert_item_when_exceed_stock"
+AFTER INSERT ON "items"
+FOR EACH ROW
+    WHEN NEW."quantity" > (
+        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
+    )
+BEGIN
+    UPDATE "items" 
+    SET "quantity" = (
+        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
+    )
+    WHERE "id" = NEW."id";
+    UPDATE "inventories"
+    SET "stock" = "stock" - NEW."quantity"
+    WHERE "id" = NEW."inventory_id";
+    UPDATE "items"
+    SET "total_price" = (
+        SELECT "price" FROM "products" 
+        WHERE "id" = (SELECT "product_id" FROM "inventories" WHERE "id" = NEW."inventory_id")
+    ) * NEW."quantity"
+    WHERE "id" = NEW."id";
+END;
+
+-- Create trigger when trying to insert an item where quantity is within stock
+CREATE TRIGGER IF NOT EXISTS "insert_item_when_within_stock"
+AFTER INSERT ON "items"
+FOR EACH ROW
+    WHEN NEW."quantity" <= (
+        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
+    )
+BEGIN
+    UPDATE "inventories"
+    SET "stock" = "stock" - NEW."quantity"
+    WHERE "id" = NEW."inventory_id";
+    UPDATE "items"
+    SET "total_price" = (
+        SELECT "price" FROM "products" 
+        WHERE "id" = (SELECT "product_id" FROM "inventories" WHERE "id" = NEW."inventory_id")
+    ) * NEW."quantity"
+    WHERE "id" = NEW."id";
+END;
+
+-- Create trigger when trying to insert item into inventory when shop is inactive
+CREATE TRIGGER IF NOT EXISTS "insert_inventory_when_shop_not_active"
+BEFORE INSERT ON "inventories"
+FOR EACH ROW
+    WHEN NEW."shop_id" IN (
+        SELECT "id" FROM "shops" WHERE "status" <> 'active'
+    )
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add new inventory to inactive shop');
+END;
+
+-- Create trigger when trying to insert inventory that existed in the table
+CREATE TRIGGER IF NOT EXISTS "insert_inventory_when_exists"
+BEFORE INSERT ON "inventories"
+FOR EACH ROW
+    WHEN (
+        NEW."product_id" IN (SELECT "id" FROM "products")
+        AND
+        NEW."shop_id" IN (SELECT "id" FROM "shops" WHERE "status" = 'active')
+        AND
+        NEW."size" IN (SELECT "size" FROM "inventories")
+    )
+BEGIN
+    UPDATE "inventories"
+    SET "stock" = "stock" + NEW."stock"
+    WHERE 
+    "product_id" = NEW."product_id" AND
+    "shop_id" = NEW."shop_id" AND
+    "size" = NEW."size";
+    SELECT RAISE(IGNORE);
+END;

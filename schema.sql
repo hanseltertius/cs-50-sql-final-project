@@ -123,7 +123,7 @@ WHERE "status" = 'active';
 -- To create view of active inventory details
 CREATE VIEW IF NOT EXISTS "active_inventory_details" AS
 SELECT 
-"inventories"."id", "brands"."name" AS "brand_name", 
+"inventories"."id", "shops"."name" AS "shop_name", "brands"."name" AS "brand_name", 
 "products"."name" AS "product_name",
 ROUND("products"."price", 2) AS "product_price", 
 "inventories"."size", "inventories"."stock" 
@@ -233,7 +233,7 @@ END;
 
 -- Create trigger when trying to insert order into inactive shop
 CREATE TRIGGER IF NOT EXISTS "insert_order_into_inactive_shop"
-BEFORE INSERT ON "shops"
+BEFORE INSERT ON "orders"
 FOR EACH ROW
     WHEN NEW."shop_id" IN (
         SELECT "id" FROM "shops" WHERE "status" <> 'active'
@@ -242,46 +242,41 @@ BEGIN
     SELECT RAISE(ABORT, 'Cannot add new order to inactive shop');
 END;
 
--- Create trigger when trying to insert an item where quantity exceed stock
-CREATE TRIGGER IF NOT EXISTS "insert_item_when_exceed_stock"
-AFTER INSERT ON "items"
+-- Create trigger when the inventory that we are trying to insert the item with has no stock
+CREATE TRIGGER IF NOT EXISTS "insert_empty_stock_item"
+BEFORE INSERT ON ITEMS
 FOR EACH ROW
-    WHEN NEW."quantity" > (
-        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
+    WHEN NEW."inventory_id" IN (
+        SELECT "id" FROM "inventories" WHERE "stock" = 0
     )
 BEGIN
-    UPDATE "items" 
-    SET "quantity" = (
-        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
-    )
-    WHERE "id" = NEW."id";
-    UPDATE "inventories"
-    SET "stock" = "stock" - NEW."quantity"
-    WHERE "id" = NEW."inventory_id";
-    UPDATE "items"
-    SET "total_price" = (
-        SELECT "price" FROM "products" 
-        WHERE "id" = (SELECT "product_id" FROM "inventories" WHERE "id" = NEW."inventory_id")
-    ) * NEW."quantity"
-    WHERE "id" = NEW."id";
+    SELECT RAISE(ABORT, 'Cannot add items when the stock is empty');
 END;
 
--- Create trigger when trying to insert an item where quantity is within stock
-CREATE TRIGGER IF NOT EXISTS "insert_item_when_within_stock"
+-- Create trigger after trying to insert an item into the items table
+CREATE TRIGGER IF NOT EXISTS "insert_item"
 AFTER INSERT ON "items"
 FOR EACH ROW
-    WHEN NEW."quantity" <= (
-        SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id"
-    )
 BEGIN
-    UPDATE "inventories"
-    SET "stock" = "stock" - NEW."quantity"
-    WHERE "id" = NEW."inventory_id";
+    -- Update the quantity if it exceeds the stock
     UPDATE "items"
-    SET "total_price" = (
-        SELECT "price" FROM "products" 
-        WHERE "id" = (SELECT "product_id" FROM "inventories" WHERE "id" = NEW."inventory_id")
-    ) * NEW."quantity"
+    SET "quantity" = (
+        CASE
+            WHEN NEW."quantity" > (SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id")
+            THEN (SELECT "stock" FROM "inventories" WHERE "id" = NEW."inventory_id")
+            ELSE NEW."quantity"
+        END
+    )
+    WHERE "id" = NEW."id";
+    -- Update the stock in the inventories table
+    UPDATE "inventories"
+    SET "stock" = "stock" - (SELECT "quantity" FROM "items" WHERE "id" = NEW."id")
+    WHERE "id" = NEW."inventory_id";
+    -- Update the total price in the items table
+    UPDATE "items"
+    SET "total_price" = 
+    (SELECT "price" FROM "products" WHERE "id" = (SELECT "product_id" FROM "inventories" WHERE "id" = NEW."inventory_id")) * 
+    (SELECT "quantity" FROM "items" WHERE "id" = NEW."id")
     WHERE "id" = NEW."id";
 END;
 
@@ -300,12 +295,12 @@ END;
 CREATE TRIGGER IF NOT EXISTS "insert_inventory_when_exists"
 BEFORE INSERT ON "inventories"
 FOR EACH ROW
-    WHEN (
-        NEW."product_id" IN (SELECT "id" FROM "products")
-        AND
-        NEW."shop_id" IN (SELECT "id" FROM "shops" WHERE "status" = 'active')
-        AND
-        NEW."size" IN (SELECT "size" FROM "inventories")
+    WHEN EXISTS (
+        SELECT "id" FROM "inventories"
+        WHERE
+        "product_id" = NEW."product_id" AND
+        "shop_id" = NEW."shop_id" AND
+        "size" = NEW."size"
     )
 BEGIN
     UPDATE "inventories"
@@ -315,4 +310,27 @@ BEGIN
     "shop_id" = NEW."shop_id" AND
     "size" = NEW."size";
     SELECT RAISE(IGNORE);
+END;
+
+-- Create trigger to check if employee id is in the selected shop id before trying to insert into order
+CREATE TRIGGER IF NOT EXISTS "insert_order_when_employee_not_in_shop"
+BEFORE INSERT ON "orders"
+FOR EACH ROW
+    WHEN NEW."employee_id" NOT IN (
+        SELECT "id" FROM "employees" WHERE "shop_id" = NEW."shop_id"
+    )
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add order when selected employee is not inside in selected shop');
+END;
+
+-- Create trigger to check if shop id inserted from orders are different to the shop id in the inventories
+CREATE TRIGGER IF NOT EXISTS "insert_order_when_inventory_not_in_shop"
+BEFORE INSERT ON "items"
+FOR EACH ROW
+    WHEN 
+        (SELECT "orders"."shop_id" FROM "orders" WHERE "orders"."id" = NEW."order_id") 
+        <>
+        (SELECT "inventories"."shop_id" FROM "inventories" WHERE "inventories"."id" = NEW."inventory_id")
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add item when selected order is not inside the selected shop');
 END;

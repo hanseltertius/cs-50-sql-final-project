@@ -294,8 +294,75 @@ VALUES
 ((SELECT "id" FROM "maximum_order_id"), 100, 1);
 
 
--- TODO : SELECT DATA FROM THE TABLE
+-- Select customer by first name and last name
+SELECT * FROM "customers"
+WHERE "first_name" = 'Kobbie' AND "last_name" = 'Mainoo';
 
--- TODO : think about the most commonly used queries
+-- Select active shops by address
+SELECT * FROM "active_shops"
+WHERE "address" LIKE '%California%';
 
--- TODO : install INDEX
+-- Select active shops by name
+SELECT * FROM "active_shops"
+WHERE "name" = 'Spongebob Shoes';
+
+-- Select employees by first name and last name
+SELECT "id", "first_name", "last_name", "phone_number", "join_date" 
+FROM "employees"
+WHERE "first_name" = 'Erik' AND "last_name" = 'ten Hag';
+
+-- Select employees by shop name
+SELECT "id", "first_name", "last_name", "phone_number", "join_date"
+FROM "employees"
+WHERE "shop_id" = (
+    SELECT "id" FROM "shops"
+    WHERE "name" = 'Gray Shoes'
+);
+
+-- Select active employees by join date
+SELECT "id", "first_name", "last_name", "phone_number", "join_date"
+FROM "employees"
+WHERE "join_date" > DATE('2020-01-01');
+
+-- Select products by price
+SELECT "id", "name", "price", "year"
+FROM "products"
+WHERE "price" <= 100;
+
+-- Select products by brand
+SELECT "id", "name", "price", "year"
+FROM "products"
+WHERE "brand_id" = (
+    SELECT "id" FROM "brands"
+    WHERE "name" = 'Ortuseight'
+);
+
+-- Select active inventory details by brand name, product name and size
+SELECT * 
+FROM "active_inventory_details"
+WHERE "brand_name" = 'Adidas' AND "product_name" = 'Adidas Copa Mundial' AND "size" = 42;
+
+-- Select active inventory details by shop name
+SELECT *
+FROM "active_inventory_details"
+WHERE "shop_name" IN ('Downtown Shoe Store', 'West Coast Shoes');
+
+-- Select invoice by order number
+SELECT *
+FROM "invoices"
+WHERE "order_number" = 10000003;
+
+-- Select invoice by shop name
+SELECT *
+FROM "invoices"
+WHERE "shop_name" = 'Checkmate Shoes';
+
+-- Select invoice by employee first name and employee last name
+SELECT *
+FROM "invoices"
+WHERE "employee_first_name" = 'Sauce' AND "employee_last_name" = 'McGavin';
+
+-- Select invoice by customer first name and customer last name
+SELECT *
+FROM "invoices"
+WHERE "customer_first_name" = 'Lucy' OR "customer_last_name" = 'Ketchum';

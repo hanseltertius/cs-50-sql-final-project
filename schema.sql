@@ -110,8 +110,11 @@ WHERE "deleted" = 0;
 
 -- To create view of active employees
 CREATE VIEW IF NOT EXISTS "active_employees" AS
-SELECT "id", "shop_id", "position_id", "first_name", "last_name", "join_date"
+SELECT "employees"."id", "first_name", "last_name", 
+"shops"."name" AS "shop_name", "positions"."name" AS "position_name", "join_date"
 FROM "employees"
+JOIN "shops" ON "shops"."id" = "employees"."shop_id"
+JOIN "positions" ON "positions"."id" = "employees"."position_id"
 WHERE "resigned" = 0;
 
 -- To create view of active shops
@@ -136,7 +139,7 @@ WHERE "inventories"."stock" > 0;
 -- To create view of invoices
 CREATE VIEW IF NOT EXISTS "invoices" AS
 SELECT 
-"orders"."id", "orders"."date" AS "order_date", "orders"."number" AS "order_number",
+"orders"."id" AS "order_id", "orders"."date" AS "order_date", "orders"."number" AS "order_number",
 "shops"."name" AS "shop_name", "employees"."first_name" AS "employee_first_name",
 "employees"."last_name" AS "employee_last_name", "customers"."first_name" AS "customer_first_name",
 "customers"."last_name" AS "customer_last_name", "brands"."name" AS "brand_name",
@@ -154,8 +157,6 @@ JOIN "brands" ON "brands"."id" = "products"."brand_id";
 -- To create view of maximum id for order
 CREATE VIEW IF NOT EXISTS "maximum_order_id" AS
 SELECT MAX("id") AS "id" FROM "orders";
-
--- CREATE INDEX
 
 -- CREATE TRIGGER
 -- Create trigger when trying to delete active customers
@@ -324,7 +325,7 @@ BEGIN
 END;
 
 -- Create trigger to check if shop id inserted from orders are different to the shop id in the inventories
-CREATE TRIGGER IF NOT EXISTS "insert_order_when_inventory_not_in_shop"
+CREATE TRIGGER IF NOT EXISTS "insert_item_when_inventory_not_in_shop"
 BEFORE INSERT ON "items"
 FOR EACH ROW
     WHEN 
@@ -334,3 +335,5 @@ FOR EACH ROW
 BEGIN
     SELECT RAISE(ABORT, 'Cannot add item when selected order is not inside the selected shop');
 END;
+
+-- CREATE INDEX

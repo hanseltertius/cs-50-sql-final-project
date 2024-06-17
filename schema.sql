@@ -1,7 +1,7 @@
 -- Turn on Foreign Key
 PRAGMA foreign_keys = ON;
 
--- CREATE TABLE
+-- #region CREATE TABLE
 -- Create customers table
 CREATE TABLE IF NOT EXISTS "customers" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -100,8 +100,9 @@ CREATE TABLE IF NOT EXISTS "items" (
     FOREIGN KEY ("order_id") REFERENCES "orders"("id"),
     FOREIGN KEY ("inventory_id") REFERENCES "inventories"("id")
 );
+-- #endregion
 
--- CREATE VIEW
+-- #region CREATE VIEW
 -- To create view of active customers
 CREATE VIEW IF NOT EXISTS "active_customers" AS
 SELECT "id", "identity_no", "first_name", "last_name"
@@ -157,8 +158,9 @@ JOIN "brands" ON "brands"."id" = "products"."brand_id";
 -- To create view of maximum id for order
 CREATE VIEW IF NOT EXISTS "maximum_order_id" AS
 SELECT MAX("id") AS "id" FROM "orders";
+-- #endregion
 
--- CREATE TRIGGER
+-- #region CREATE TRIGGER
 -- Create trigger when trying to delete active customers
 CREATE TRIGGER IF NOT EXISTS "delete_active_customers"
 INSTEAD OF DELETE ON "active_customers"
@@ -335,5 +337,7 @@ FOR EACH ROW
 BEGIN
     SELECT RAISE(ABORT, 'Cannot add item when selected order is not inside the selected shop');
 END;
+-- #endregion
 
--- CREATE INDEX
+-- #region CREATE INDEX
+-- #endregion

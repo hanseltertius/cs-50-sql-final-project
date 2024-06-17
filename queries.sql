@@ -1,3 +1,4 @@
+-- #region INSERT
 -- Insert into customers table
 INSERT INTO "customers" ("identity_no", "first_name", "last_name", "address", "phone_number", "email")
 VALUES 
@@ -292,8 +293,9 @@ VALUES
 ((SELECT "id" FROM "maximum_order_id"), 66, 3),
 ((SELECT "id" FROM "maximum_order_id"), 75, 1),
 ((SELECT "id" FROM "maximum_order_id"), 100, 1);
+-- #endregion
 
-
+-- #region SELECT
 -- Select customer by first name and last name
 SELECT * FROM "customers"
 WHERE "first_name" = 'Kobbie' AND "last_name" = 'Mainoo';
@@ -366,3 +368,4 @@ WHERE "employee_first_name" = 'Sauce' AND "employee_last_name" = 'McGavin';
 SELECT *
 FROM "invoices"
 WHERE "customer_first_name" = 'Lucy' OR "customer_last_name" = 'Ketchum';
+-- #endregion

@@ -340,4 +340,37 @@ END;
 -- #endregion
 
 -- #region CREATE INDEX
+-- Create index on customers
+CREATE INDEX "customer_first_name_index" ON "customers" ("first_name");
+CREATE INDEX "customer_last_name_index" ON "customers" ("last_name");
+
+-- Create index on employees
+CREATE INDEX "employee_shop_index" ON "employees" ("shop_id");
+CREATE INDEX "employee_first_name_index" ON "employees" ("first_name");
+CREATE INDEX "employee_last_name_index" ON "employees" ("last_name");
+CREATE INDEX "employee_join_date_index" ON "employees" ("join_date");
+
+-- Create index on shops
+CREATE INDEX "shop_name_index" ON "shops" ("name");
+CREATE INDEX "shop_status_index" ON "shops" ("status");
+
+-- Create index on products
+CREATE INDEX "product_price_index" ON "products" ("price");
+CREATE INDEX "product_brand_index" ON "products" ("brand_id");
+
+-- Create index on brands
+CREATE INDEX "brand_index" ON "brands" ("name");
+
+-- Create index on active inventory details view
+CREATE INDEX "inventory_index" ON "inventories" ("stock", "size", "shop_id", "product_id");
+
+-- Create Index on invoice view, where the underlying table is items
+CREATE INDEX "item_order_index" ON "items" ("order_id");
+CREATE INDEX "item_inventory_index" ON "items" ("inventory_id");
+
+-- Create index on orders
+CREATE INDEX "order_shop_index" ON "orders" ("shop_id");
+CREATE INDEX "order_employee_index" ON "orders" ("employee_id");
+CREATE INDEX "order_customer_index" ON "orders" ("customer_id");
+CREATE INDEX "order_number_index" ON "orders" ("number");
 -- #endregion

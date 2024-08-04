@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS "orders" (
     "date" NUMERIC DEFAULT CURRENT_TIMESTAMP,
     "number" INTEGER UNIQUE NOT NULL,
     "type" TEXT NOT NULL CHECK ("type" IN ('online', 'offline')),
-    "status" TEXT NOT NULL CHECK ("type" = 'online' AND STATUS IN ('pending confirmation', 'confirmed', 'packing', 'shipped', 'delivered', 'cancelled') OR "type" = 'offline' AND "status" = 'purchased'),
+    "status" TEXT NOT NULL CHECK ("type" = 'online' AND "status" IN ('pending confirmation', 'confirmed', 'packing', 'shipped', 'delivered', 'cancelled') OR "type" = 'offline' AND "status" = 'purchased'),
     FOREIGN KEY ("shop_id") REFERENCES "shops"("id"),
     FOREIGN KEY ("employee_id") REFERENCES "employees"("id"),
     FOREIGN KEY ("customer_id") REFERENCES "customers"("id")
@@ -245,9 +245,20 @@ BEGIN
     SELECT RAISE(ABORT, 'Cannot add new order to inactive shop');
 END;
 
+-- Create trigger to check if employee id is in the selected shop id before trying to insert into order
+CREATE TRIGGER IF NOT EXISTS "insert_order_when_employee_not_in_shop"
+BEFORE INSERT ON "orders"
+FOR EACH ROW
+    WHEN NEW."employee_id" NOT IN (
+        SELECT "id" FROM "employees" WHERE "shop_id" = NEW."shop_id"
+    )
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add order when selected employee is not inside in selected shop');
+END;
+
 -- Create trigger when the inventory that we are trying to insert the item with has no stock
 CREATE TRIGGER IF NOT EXISTS "insert_empty_stock_item"
-BEFORE INSERT ON ITEMS
+BEFORE INSERT ON "items"
 FOR EACH ROW
     WHEN NEW."inventory_id" IN (
         SELECT "id" FROM "inventories" WHERE "stock" = 0
@@ -283,6 +294,18 @@ BEGIN
     WHERE "id" = NEW."id";
 END;
 
+-- Create trigger to check if shop id inserted from orders are different to the shop id in the inventories
+CREATE TRIGGER IF NOT EXISTS "insert_item_when_inventory_not_in_shop"
+BEFORE INSERT ON "items"
+FOR EACH ROW
+    WHEN 
+        (SELECT "orders"."shop_id" FROM "orders" WHERE "orders"."id" = NEW."order_id") 
+        <>
+        (SELECT "inventories"."shop_id" FROM "inventories" WHERE "inventories"."id" = NEW."inventory_id")
+BEGIN
+    SELECT RAISE(ABORT, 'Cannot add item when selected order is not inside the selected shop');
+END;
+
 -- Create trigger when trying to insert item into inventory when shop is inactive
 CREATE TRIGGER IF NOT EXISTS "insert_inventory_when_shop_not_active"
 BEFORE INSERT ON "inventories"
@@ -315,28 +338,6 @@ BEGIN
     SELECT RAISE(IGNORE);
 END;
 
--- Create trigger to check if employee id is in the selected shop id before trying to insert into order
-CREATE TRIGGER IF NOT EXISTS "insert_order_when_employee_not_in_shop"
-BEFORE INSERT ON "orders"
-FOR EACH ROW
-    WHEN NEW."employee_id" NOT IN (
-        SELECT "id" FROM "employees" WHERE "shop_id" = NEW."shop_id"
-    )
-BEGIN
-    SELECT RAISE(ABORT, 'Cannot add order when selected employee is not inside in selected shop');
-END;
-
--- Create trigger to check if shop id inserted from orders are different to the shop id in the inventories
-CREATE TRIGGER IF NOT EXISTS "insert_item_when_inventory_not_in_shop"
-BEFORE INSERT ON "items"
-FOR EACH ROW
-    WHEN 
-        (SELECT "orders"."shop_id" FROM "orders" WHERE "orders"."id" = NEW."order_id") 
-        <>
-        (SELECT "inventories"."shop_id" FROM "inventories" WHERE "inventories"."id" = NEW."inventory_id")
-BEGIN
-    SELECT RAISE(ABORT, 'Cannot add item when selected order is not inside the selected shop');
-END;
 -- #endregion
 
 -- #region CREATE INDEX

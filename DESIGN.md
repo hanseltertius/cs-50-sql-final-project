@@ -151,6 +151,47 @@ In this section you should answer the following questions:
 
 Indexes
 
+customer_full_name_index
+This index is used for speed up searching on customers where we need to search by first_name and last_name
+
+customer_last_name_index
+This index is used for handling a query where we try to find invoices by customer based on first_name or last_name as OR condition needs to find the column one by one instead of finding all the columns simultaneously that is achiveable by using AND condition. Therefore the use of regular index is more effective compared to using composite index.
+
+shops_status_index
+This index is used for speed up search on shops table, specifically to search the view active_shops where status = 'active' as we cannot create index directly on views and need to create on the underlying table.
+
+shop_name_index
+This index is used for speed up search on shops table where we try to search shops by name.
+
+employee_name_index
+This index is used for speed up search on employees table where we try to search employees by first_name and last_name respectively. We are using composite index as we don't have OR condition as well as we are searching by employee first name and last name simultaneously.
+
+employee_shop_index
+This index is used for speed up search on employees table where we try to get employees by using shop_id column
+
+employee_join_date_index
+This index is used for speed up search on employees table where we try to get employees by using join_date column.
+
+product_price_index
+We used it to speed up search on products table by price.
+
+product_brand_index
+We used the index to speed up search on products table by brand_id. We are not using the index of name in the brands table as SQLite uses autoindex when the column is either has PRIMARY KEY / UNIQUE constraint.
+
+inventory_index
+We used the index to speed up search on inventories table by stock as we are searching from the view active_inventory_details where we need to check if the stock is more than 0.
+
+order_shop_index
+We used the index to speed up search on orders table by using shop_id column, where we need to use it to search from invoices view. Specifically, we need to search the instance by name attribute from shops table, which makes indexing from JOIN statement to be useful.
+
+order_employee_index
+We used the index to speed up search on orders table by using employee_id column, where it is useful for searching through the employee.
+
+order_customer_index
+We used the index to speed up search on customers table by using customer_id column, where it is useful for searching through the customer.
+
+item_order_index
+We used the index to speed up search on items table by using order_id. Specifically, we are using the index to quickly search the contents of the orders table in the invoices view, which makes using INDEX on JOIN statement useful when it comes to search for contents from another table.
 
 Views
 

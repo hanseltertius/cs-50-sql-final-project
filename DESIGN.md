@@ -141,7 +141,41 @@ Items:
 
 ### Relationships
 
-In this section you should include your entity relationship diagram and describe the relationships between the entities in your database.
+The entity relationship diagram shows the relationships between entities in my database.
+
+![CS50 Final Project Entity Diagram](diagram.png)
+
+Descriptions:
+- employees => positions :
+a. 1 employee holds 1 position, while 1 position is held by at least 1 employee
+b. this type of relationship specifies one-to-many relationship 
+- employees => shops :
+a. 1 employee works in 1 shop, while 1 shop is worked by at least 1 employee
+b. this type of relationship specifies one-to-many relationship
+- shops => orders : 
+a. 1 shop has 0 to many orders, while 1 order is linked to 1 shop
+b. this type of relationship specifies one-to-many relationship
+- shops => inventories : 
+a. 1 shop has 0 to many inventories, while 1 inventory is linked to 1 shop
+b. this type of relationship specifies one-to-many relationship
+- employees => orders : 
+a. 1 employee creates 0 to many orders, while 1 order is created by 1 employee
+b. this type of relationship specifies one-to-many relationship
+- customers => orders : 
+a. 1 customer has 0 to many orders, but 1 order is linked to 1 customer
+b. this type of relationship specifies one-to-many relationship
+- orders => items : 
+a. 1 order purchases 0 to many items, but 1 item is being purchased by only 1 order
+b. this type of relationship specifies one-to-many relationship
+- items => inventories : 
+a. 1 item associates with 1 inventory and 1 inventory is associated with 1 item
+b. this type of relationship specifies one-to-one relationship
+- products => inventories : 
+a. 1 product has 0 to many inventories, while 1 inventory is linked to 1 product
+b. this type of relationship specifies one-to-many relationship
+- brands => products
+a. 1 brand makes 1 to more than 1 products, while 1 product is made by 1 brand
+b. this type of relationship specifies one-to-many relationship
 
 ## Optimizations
 

@@ -9,7 +9,11 @@ CREATE TABLE IF NOT EXISTS "customers" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT,
     "address" TEXT NOT NULL,
-    "phone_number" TEXT,
+    "phone_number" TEXT CHECK (
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
+    ),
     "email" TEXT CHECK ("email" LIKE '%_@_%._%'),
     "deleted" INTEGER CHECK ("deleted" IN (0, 1)) DEFAULT 0
 );
@@ -39,7 +43,11 @@ CREATE TABLE IF NOT EXISTS "employees" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT,
     "address" TEXT NOT NULL,
-    "phone_number" TEXT,
+    "phone_number" TEXT CHECK (
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]' OR
+        "phone_number" GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'
+    ),
     "email" TEXT CHECK ("email" LIKE '%_@_%._%'),
     "join_date" NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "resigned" INTEGER CHECK ("resigned" IN (0, 1)) DEFAULT 0,
@@ -95,7 +103,7 @@ CREATE TABLE IF NOT EXISTS "items" (
     "id" INTEGER PRIMARY KEY AUTOINCREMENT,
     "order_id" INTEGER NOT NULL,
     "inventory_id" INTEGER NOT NULL,
-    "quantity" INTEGER NOT NULL,
+    "quantity" INTEGER NOT NULL CHECK ("quantity" > 0),
     "total_price" NUMERIC DEFAULT 0 CHECK ("total_price" >= 0),
     FOREIGN KEY ("order_id") REFERENCES "orders"("id"),
     FOREIGN KEY ("inventory_id") REFERENCES "inventories"("id")

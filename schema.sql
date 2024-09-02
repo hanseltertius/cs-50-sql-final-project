@@ -177,27 +177,16 @@ BEGIN
     UPDATE "customers" SET "deleted" = 1 WHERE "id" = OLD."id";
 END;
 
--- Create trigger when trying to insert into active customer where identity no exists
-CREATE TRIGGER IF NOT EXISTS "insert_active_customers_when_exists"
-INSTEAD OF INSERT ON "active_customers"
+-- Create trigger when trying to insert into customers table where identity no exists
+CREATE TRIGGER IF NOT EXISTS "insert_customer_when_exists"
+BEFORE INSERT ON "customers"
 FOR EACH ROW
     WHEN NEW."identity_no" IN (
         SELECT "identity_no" FROM "customers"
     )
 BEGIN
     UPDATE "customers" SET "deleted" = 0 WHERE "identity_no" = NEW."identity_no";
-END;
-
--- Create trigger when trying to insert into active customer where identity no does not exist
-CREATE TRIGGER IF NOT EXISTS "insert_active_customers_when_not_exists"
-INSTEAD OF INSERT ON "active_customers"
-FOR EACH ROW
-    WHEN NEW."identity_no" NOT IN (
-        SELECT "identity_no" FROM "customers"
-    )
-BEGIN
-    INSERT INTO "customers" ("identity_no", "first_name", "last_name", "address", "phone_number", "email")
-    VALUES (NEW."identity_no", NEW."first_name", NEW."last_name", NEW."address", NEW."phone_number", NEW."email");
+    SELECT RAISE(IGNORE);
 END;
 
 -- Create trigger when trying to delete active employees
@@ -208,27 +197,16 @@ BEGIN
     UPDATE "employees" SET "resigned" = 1 WHERE "id" = OLD."id";
 END;
 
--- Create trigger when trying to insert active employees where identity no exists
-CREATE TRIGGER IF NOT EXISTS "insert_active_employees_when_exists"
-INSTEAD OF INSERT ON "active_employees"
+-- Create trigger when trying to insert into employees table where identity no exists
+CREATE TRIGGER IF NOT EXISTS "insert_employee_when_exists"
+BEFORE INSERT ON "employees"
 FOR EACH ROW
     WHEN NEW."identity_no" IN (
         SELECT "identity_no" FROM "employees"
     )
 BEGIN
     UPDATE "employees" SET "resigned" = 0 WHERE "identity_no" = NEW."identity_no";
-END;
-
--- Create trigger when trying to insert active employees where identity no does not exist
-CREATE TRIGGER IF NOT EXISTS "insert_active_employees_when_not_exists"
-INSTEAD OF INSERT ON "active_employees"
-FOR EACH ROW
-    WHEN NEW."identity_no" NOT IN (
-        SELECT "identity_no" FROM "employees"
-    )
-BEGIN
-    INSERT INTO "employees" ("shop_id", "position_id", "identity_no", "first_name", "last_name", "address", "phone_number", "email", "join_date")
-    VALUES (NEW."shop_id", NEW."position_id", NEW."identity_no", NEW."first_name", NEW."last_name", NEW."address", NEW."phone_number", NEW."email", NEW."join_date");
+    SELECT RAISE(IGNORE);
 END;
 
 -- Create trigger when trying to insert employee into inactive shop

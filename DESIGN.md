@@ -173,7 +173,7 @@ b. this type of relationship specifies one-to-one relationship
 - products => inventories : 
 a. 1 product has 0 to many inventories, while 1 inventory is linked to 1 product
 b. this type of relationship specifies one-to-many relationship
-- brands => products
+- brands => products :
 a. 1 brand makes 1 to more than 1 products, while 1 product is made by 1 brand
 b. this type of relationship specifies one-to-many relationship
 
@@ -262,19 +262,13 @@ Triggers
 delete_active_customers:
 This trigger is to set value of deleted from an item in customers table into 1 instead as we cannot directly delete data from views.
 
-insert_active_customers_when_exists:
+insert_customers_when_exists:
 This trigger is to update the deleted value to 0 from an item in customers table if identity_no that we entered exists in customers table.
-
-insert_active_customers_when_not_exists:
-This trigger is to insert active customer into customers table when identity_no that we entered does not exist in customers table.
 
 delete_active_employees:
 This trigger is to set value of deleted from an item in employees table into 1 instead as we cannot directly delete data from views.
 
-insert_active_employees_when_exists:
-This trigger is to update the deleted value to 0 from an item in employees table if identity_no that we entered exists in employees table.
-
-insert_active_employees_when_not_exists:
+insert_employees_when_exists:
 This trigger is to update the deleted value to 0 from an item in employees table if identity_no that we entered exists in employees table.
 
 insert_employee_into_inactive_shop:

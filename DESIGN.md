@@ -165,7 +165,7 @@ b. this type of relationship specifies one-to-many relationship
 a. 1 customer has 0 to many orders, but 1 order is linked to 1 customer
 b. this type of relationship specifies one-to-many relationship
 - orders => items : 
-a. 1 order purchases 0 to many items, but 1 item is being purchased by only 1 order
+a. 1 order purchases 1 to many items, but 1 item is being purchased by only 1 order
 b. this type of relationship specifies one-to-many relationship
 - items => inventories : 
 a. 1 item associates with 1 inventory and 1 inventory is associated with 1 item

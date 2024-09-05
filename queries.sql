@@ -392,3 +392,45 @@ SELECT *
 FROM "invoices"
 WHERE "customer_first_name" = 'Lucy' OR "customer_last_name" = 'Ketchum';
 -- #endregion
+
+-- #region UPDATE
+-- Update customers data
+UPDATE "customers"
+SET "address" = '60 Fighting Road, Alabama'
+WHERE "id" = 1;
+
+UPDATE "customers"
+SET "email" = 'johnnie.cruz@yahoo.com', "phone_number" = '02149930019'
+WHERE "id" = 6;
+
+-- Update shops data
+UPDATE "shops"
+SET "address" = '420 Gray Rd., Arkansas', "phone_number" = '02177439812'
+WHERE "id" = 7;
+
+UPDATE "shops"
+SET "status" = 'active' 
+WHERE "id" IN (3, 5); 
+
+-- Update employees data
+UPDATE "employees"
+SET "position_id" = 2
+WHERE "id" = 9;
+
+UPDATE "employees" 
+SET "address" = '45 Rodeo Rd., Nevada', "phone_number" = '02136559924'
+WHERE "id" = 7;
+
+-- Update orders data
+UPDATE "orders"
+SET "status" = 'packing'
+WHERE "id" = 1;
+
+UPDATE "orders"
+SET "status" = 'shipped'
+WHERE "id" = 1;
+
+UPDATE "orders"
+SET "status" = 'delivered'
+WHERE "id" = 1;
+-- #endregion

@@ -220,6 +220,14 @@ BEGIN
     SELECT RAISE(ABORT, 'Cannot add new employee to inactive shop');
 END;
 
+-- Create trigger when trying to delete active shops
+CREATE TRIGGER IF NOT EXISTS "delete_active_shops"
+INSTEAD OF DELETE ON "active_shops"
+FOR EACH ROW
+BEGIN
+    UPDATE "shops" SET "status" = 'closed' WHERE "id" = OLD."id";
+END;
+
 -- Create trigger when trying to insert order into inactive shop
 CREATE TRIGGER IF NOT EXISTS "insert_order_into_inactive_shop"
 BEFORE INSERT ON "orders"

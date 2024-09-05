@@ -274,6 +274,9 @@ This trigger is to update the deleted value to 0 from an item in employees table
 insert_employee_into_inactive_shop:
 This trigger is to prevent on inserting an employee into inactive shop by checking if the status from the shop table based on selected shop_id is not 'active'.
 
+delete_active_shops:
+This trigger is to set the value of status column in a shop where the status is 'active' into 'closed' as we cannot directly delete data from views.
+
 insert_order_into_inactive_shop:
 This trigger is to prevent on inserting an order into inactive shop by by checking if the status from the shop table based on selected shop_id is not 'active'.
 

@@ -293,6 +293,29 @@ VALUES
 ((SELECT "id" FROM "maximum_order_id"), 66, 3),
 ((SELECT "id" FROM "maximum_order_id"), 75, 1),
 ((SELECT "id" FROM "maximum_order_id"), 100, 1);
+
+INSERT INTO "orders" ("shop_id", "employee_id", "customer_id", "date", "number", "type", "status")
+VALUES
+(6, 11, 1, '2024-07-01', 10000005, 'offline', 'purchased');
+INSERT INTO "items" ("order_id", "inventory_id", "quantity")
+VALUES
+((SELECT "id" FROM "maximum_order_id"), 91, 1),
+((SELECT "id" FROM "maximum_order_id"), 107, 2);
+
+INSERT INTO "orders" ("shop_id", "employee_id", "customer_id", "date", "number", "type", "status")
+VALUES
+(8, 19, 6, '2024-06-18', 10000006, 'online', 'confirmed');
+INSERT INTO "items" ("order_id", "inventory_id", "quantity")
+VALUES
+((SELECT "id" FROM "maximum_order_id"), 142, 2);
+
+INSERT INTO "orders" ("shop_id", "employee_id", "customer_id", "date", "number", "type", "status")
+VALUES
+(2, 7, 4, '2024-08-08', 10000007, 'offline', 'purchased');
+INSERT INTO "items" ("order_id", "inventory_id", "quantity")
+VALUES 
+((SELECT "id" FROM "maximum_order_id"), 22, 1),
+((SELECT "id" FROM "maximum_order_id"), 142, 2);
 -- #endregion
 
 -- #region SELECT

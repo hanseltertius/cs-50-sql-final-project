@@ -397,40 +397,40 @@ WHERE "customer_first_name" = 'Lucy' OR "customer_last_name" = 'Ketchum';
 -- Update customers data
 UPDATE "customers"
 SET "address" = '60 Fighting Road, Alabama'
-WHERE "id" = 1;
+WHERE "first_name" = 'Benjamin' AND "last_name" = 'Frank';
 
 UPDATE "customers"
 SET "email" = 'johnnie.cruz@yahoo.com', "phone_number" = '02149930019'
-WHERE "id" = 6;
+WHERE "first_name" = 'Johnnie' AND "last_name" = 'Cruz';
 
 -- Update shops data
 UPDATE "shops"
 SET "address" = '420 Gray Rd., Arkansas', "phone_number" = '02177439812'
-WHERE "id" = 7;
+WHERE "name" = 'Gray Shoes';
 
 UPDATE "shops"
 SET "status" = 'active' 
-WHERE "id" IN (3, 5); 
+WHERE "name" IN ('East Coast Shoes', 'Red Army Shoes');
 
 -- Update employees data
 UPDATE "employees"
 SET "position_id" = 2
-WHERE "id" = 9;
+WHERE "first_name" = 'Scott' AND "last_name" = 'Mctominay';
 
 UPDATE "employees" 
 SET "address" = '45 Rodeo Rd., Nevada', "phone_number" = '02136559924'
-WHERE "id" = 7;
+WHERE "first_name" = 'Stanley' AND "last_name" = 'Jones';
 
 -- Update orders data
 UPDATE "orders"
 SET "status" = 'packing'
-WHERE "id" = 1;
+WHERE "number" = 10000001;
 
 UPDATE "orders"
 SET "status" = 'shipped'
-WHERE "id" = 1;
+WHERE "number" = 10000001;
 
 UPDATE "orders"
 SET "status" = 'delivered'
-WHERE "id" = 1;
+WHERE "number" = 10000001;
 -- #endregion

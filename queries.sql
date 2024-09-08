@@ -7,7 +7,8 @@ VALUES
 (10000003, 'Kobbie', 'Mainoo', '37 United Road, Texas', '02199774312', 'kobbie_mainoo@manutd.com'),
 (10000004, 'Ash', 'Ketchum', '1 Pallet Town, Missisipi', '02177554433', 'ashketchum@gmail.com'),
 (10000005, 'Lucy', 'Jones', '10 Central Park Road, Florida', '02199334422', 'lucy.j@office365.com'),
-(10000006, 'Johnnie', 'Cruz', '99 Straight Street, Virginia', '02189015432', 'johnnie.cruz@blizzard.com');
+(10000006, 'Johnnie', 'Cruz', '99 Straight Street, Virginia', '02189015432', 'johnnie.cruz@blizzard.com'),
+(10000007, 'Arie', 'Luyendyk', '500 Speedway City, Indianapolis', '02147793922', 'arie_l@yahoo.com');
 
 -- Insert into positions table
 INSERT INTO "positions" ("name")
@@ -433,4 +434,18 @@ WHERE "number" = 10000001;
 UPDATE "orders"
 SET "status" = 'delivered'
 WHERE "number" = 10000001;
+-- #endregion
+
+-- #region DELETE
+-- Delete from "active_customers" view, which will activate a TRIGGER "delete_active_customers"
+DELETE FROM "active_customers" 
+WHERE "first_name" = 'Arie' AND "last_name" = 'Luyendyk';
+
+-- Delete from "active_employees" view, which will activate a TRIGGER "delete_active_employees"
+DELETE FROM "active_employees"
+WHERE "last_name" = 'Hopkins';
+
+-- Delete from "active_shops" view, which will activate a TRIGGER "delete_active_shops"
+DELETE FROM "active_shops"
+WHERE "name" = 'Red Army Shoes';
 -- #endregion

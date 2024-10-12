@@ -394,6 +394,24 @@ FROM "invoices"
 WHERE "customer_first_name" = 'Lucy' OR "customer_last_name" = 'Ketchum';
 -- #endregion
 
+-- #region SELECT statement for UPDATE
+SELECT "id", "first_name", "last_name", "address"
+FROM "customers"
+WHERE "first_name" IN ('Benjamin', 'Johnnie');
+
+SELECT "id", "name", "address", "phone_number"
+FROM "shops"
+WHERE "name" IN ('Gray Shoes', 'East Coast Shoes', 'Red Army Shoes');
+
+SELECT "id", "first_name", "last_name", "position_id", "address", "phone_number"
+FROM "employees"
+WHERE "first_name" IN ('Scott', 'Stanley');
+
+SELECT "id", "shop_id", "employee_id", "customer_id", "date", "number", "type", "status"
+FROM "orders"
+WHERE "number" = 10000001;
+-- #endregion
+
 -- #region UPDATE
 -- Update customers data
 UPDATE "customers"
@@ -434,6 +452,17 @@ WHERE "number" = 10000001;
 UPDATE "orders"
 SET "status" = 'delivered'
 WHERE "number" = 10000001;
+-- #endregion
+
+-- #region SELECT statement for DELETE
+SELECT * FROM "active_customers"
+WHERE "first_name" = 'Arie' AND "last_name" = 'Luyendyk';
+
+SELECT * FROM "active_employees"
+WHERE "last_name" = 'Hopkins';
+
+SELECT * FROM "active_shops"
+WHERE "name" = 'Red Army Shoes';
 -- #endregion
 
 -- #region DELETE

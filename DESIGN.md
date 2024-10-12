@@ -2,7 +2,7 @@
 
 By Hansel Tertius
 
-Video overview: <URL HERE>
+Video overview: https://youtu.be/x-JarJ6Igmc
 
 ## Scope
 

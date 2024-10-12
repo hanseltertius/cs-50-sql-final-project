@@ -6,8 +6,6 @@ Video overview: https://youtu.be/x-JarJ6Igmc
 
 ## Scope
 
-In this section you should answer the following questions:
-
 What is the purpose of your database? </br>
 The purpose of the database is to store data of shoe warehouse's customers, employees, shops, inventories provided by each shop including products and brands, as well as the order history and the items inside it. 
 
@@ -53,7 +51,7 @@ In the database, a user should not be able to : </br>
 
 ### Entities
 
-<u>Customers:</u>
+<ins>Customers:</ins>
 1. "id" : specifies the id of a customer, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the customer has been deleted from the table.
 2. "identity_no" : specifies the identity number of a customer, where the type is INTEGER as we only accept number and we have UNIQUE and NOT NULL constraint where we cannot accept duplicate identity no
 3. "first_name" : specifies the first name of a customer, where the type is TEXT and we need to fill the name as we have NOT NULL constraint 
@@ -208,8 +206,8 @@ b. to look at job title for each employee
 
 3. active_shops: </br>
 We create view active_shops to : </br>
-a. look at which shops in an outlet that is currently open </br>
-b. to determine whether or not we need to add employee into the shop
+&ensp;a. look at which shops in an outlet that is currently open </br>
+&ensp;b. to determine whether or not we need to add employee into the shop
 
 4. active_inventory_details: </br>
 The reason for creating active_inventory_details is to look at which products that are currently in stock, as well as which shops that sell that product.
@@ -258,8 +256,8 @@ This trigger is to prevent on inserting an item from the inventories if the stoc
 After inserting an item into the items table, we need to: </br>
 &ensp;a. Set the quantity based on 2 conditions: </br>
 &ensp;&ensp;&ensp;i. If quantity on items exceed stock from the selected inventories table: set the selected quantity based on stock from the inventories table </br>
-&ensp;ii. If quantity on items does not exceed stock from the selected inventories table: set the selected quantity from items </br>
-&ensp;&ensp;&ensp;b. Subtracts the stock in the inventories table by the quantity of selected instance from items table and using inventory_id to find the selected inventory. </br>
+&ensp;&ensp;&ensp;ii. If quantity on items does not exceed stock from the selected inventories table: set the selected quantity from items </br>
+&ensp;b. Subtracts the stock in the inventories table by the quantity of selected instance from items table and using inventory_id to find the selected inventory. </br>
 &ensp;c. Update the total price in the items table by : </br>
 &ensp;&ensp;&ensp;i. multiply price from the selected product_id times </br>
 &ensp;&ensp;&ensp;ii. the quantity of item based on id.

@@ -61,7 +61,7 @@ In the database, a user should not be able to : </br>
 7. "email" : specifies the email of a customer, where we have TEXT type and check for valid email through CHECK constraint using '%_@_%._%'
 8. "deleted" : specifies the deleted customer status, where boolean in SQLite can only accept integer of 0 - 1, which makes the type of INTEGER. Also, we have CHECK constraint if the value is either 0 or 1 and DEFAULT value of 0.
 
-<u>Shops:</u>
+<ins>Shops:</ins>
 1. "id" : specifies the id of a shop, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the shop has been deleted from the table
 2. "name" : specifies the name of a shop, where the type is TEXT and we need to fill out the value by NOT NULL constraint
 3. "address" : specifies the address of a shop, where we accept TEXT data type and has NOT NULL constraint as it is required field
@@ -69,11 +69,11 @@ In the database, a user should not be able to : </br>
 5. "email" : specifies the email of a shops, where we have TEXT type and check for valid email through CHECK constraint using '%_@_%._%'
 6. "status" : specifies the status of a shop where the value accepts TEXT data type and we only accept 'active', 'on renovation', 'closed' value through CHECK constraint
 
-<u>Positions:</u>
+<ins>Positions:</ins>
 1. "id" : specifies the id of a position, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the shop has been deleted from the table
 2. "name" : specifies the name of a position, where we accept string as a value through TEXT and it is a required field through NOT NULL constraint
 
-<u>Employees:</u>
+<ins>Employees:</ins>
 1. "id" : specifies the id of an employee, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the employee has been deleted from the table
 2. "shop_id" : specifies the id of a shop that an employee works with, where the type is INTEGER. The constraint is FOREIGN KEY where we referenced from id attribute in shops table, and we have NOT NULL constraint as we need a reference value
 3. "position_id" : specifies the id of a current position that an employee holds, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in positions table, and we have NOT NULL constraint as we need a reference value
@@ -86,26 +86,26 @@ In the database, a user should not be able to : </br>
 10. "join_date" : specifies the join date of an employee, where we have NUMERIC data type as SQLite cannot accept DATETIME data type, the field is mandatory so that we have NOT NULL constraint and default value of CURRENT_TIMESTAMP with specifies the time where the data is created.
 11. "resigned" : specifies whether the employee has resigned. The accepted data type is INTEGER as SQLite does not support boolean data type, where we only input 0 and 1 through CHECK constraint. By using DEFAULT constraint, it specifies that the default value is 0.
 
-<u>Brands:</u>
+<ins>Brands:</ins>
 1. "id" : specifies the id of a brand, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the brand has been deleted from the table
 2. "name" : specifies the name of a brand, where the type is TEXT and the field is required and there is no duplicate values as brand is related to the trademark, which makes UNIQUE and NOT NULL constraint to be installed
 3. "status" : specifies the status of a brand, where the typs is TEXT as well as the value is required (NOT NULL constraint). However, we limit the value into 'active' and 'inactive' through CHECK constraint
 
-<u>Products:</u>
+<ins>Products:</ins>
 1. "id" : specifies the id of a product, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the brand has been deleted from the table
 2. "brand_id" : specifies the id of a brand that a product holds, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in brands table, and we have NOT NULL constraint as we need a reference value
 3. "name" : specifies the name of a product, where we accept the string value in a form of TEXT. The field is mandatory as we have NOT NULL constraint in the column
 4. "price" : specifies the price of a product, where we have the NUMERIC data type as the value can hold decimal place. In terms of price, we cannot accept 0 / negative value as we have CHECK if the price is more than 0
 5. "year" : specifies the year where the product is produced, where we accept the INTEGER data type and we cannot have 0 / negative value by having a CHECK constraint where the price is more than 0
 
-<u>Inventories:</u>
+<ins>Inventories:</ins>
 1. "id" : specifies the id of a inventory, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the brand has been deleted from the table
 2. "shop_id" : specifies the id of a shop that an inventory has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in shops table, and we have NOT NULL constraint as we need a reference value
 3. "product_id" : specifies the id of a product that an inventory has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in products table, and we have NOT NULL constraint as we need a reference value
 4. "size" : specifies the size of a shoe, where the data type is NUMERIC since shoe size has decimal values and the range is BETWEEN 30 to 55
 5. "stock" : specifies the stock of a shoe, where the data type is INTEGER, we cannot have negative value in stock as we have CHECK constraint to see if the stock is more than or equal to 0. The default value of a stock is 0.
 
-<u>Orders:</u>
+<ins>Orders:</ins>
 1. "id" : specifies the id of an order, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the order has been deleted from the table
 2. "shop_id" : specifies the id of a shop that an order has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in shops table, and we have NOT NULL constraint as we need a reference value
 3. "employee_id" : specifies the id of a employee that an order has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in employees table, and we have NOT NULL constraint as we need a reference value
@@ -117,7 +117,7 @@ In the database, a user should not be able to : </br>
 &ensp;a. if the type is 'online', then we have CHECK constraints where the accepted values are : 'pending confirmation', 'confirmed', 'packing', 'shipped', 'delivered', 'cancelled'</br>
 &ensp;b. if the type is 'offline', then we have CHECK constraints where the accepted value is only 'purchased'</br>
 
-<u>Items:</u>
+<ins>Items:</ins>
 1. "id" : specifies the id of an item, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the item has been deleted from the table
 2. "order_id" : specifies the id of a order that an item has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in orders table, and we have NOT NULL constraint as we need a reference value
 3. "inventory_id" : specifies the id of a inventory that an item has, where the type is INTEGER. The constraint of the column is FOREIGN KEY where we referenced from id attribute in inventories table, and we have NOT NULL constraint as we need a reference value
@@ -130,7 +130,7 @@ The entity relationship diagram shows the relationships between entities in my d
 
 ![CS50 Final Project Entity Diagram](diagram.png)
 
-<u>Descriptions:</u>
+<ins>Descriptions:</ins>
 1. employees => positions : </br>
 a. 1 employee holds 1 position, while 1 position is held by at least 1 employee </br>
 b. this type of relationship specifies one-to-many relationship </br>
@@ -195,7 +195,7 @@ We used the index to speed up search on customers table by using customer_id col
 14. item_order_index : </br>
 We used the index to speed up search on items table by using order_id. Specifically, we are using the index to quickly search the contents of the orders table in the invoices view, which makes using INDEX on JOIN statement useful when it comes to search for contents from another table.
 
-<u>Views</u>
+<ins>Views</ins>
 
 1. active_customers: </br>
 a. to look at which customers that are currently active in database of a shoe outlet.
@@ -223,7 +223,7 @@ We need to create invoices as a view to look at the order details of a purchase 
 The reason for installing view maximum_order_id is when we try to create order for receipt 
 and at the same time we need to purchase shoe(s) into the items table that is in the same order.
 
-<u>Triggers</u>
+<ins>Triggers</ins>
 
 1. delete_active_customers: </br>
 This trigger is to set value of deleted from an item in customers table into 1 instead as we cannot directly delete data from views.

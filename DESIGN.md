@@ -29,9 +29,6 @@ The things that are not included in a database scope are: </br>
 
 ## Functional Requirements
 
-In this section you should answer the following questions:
-
-* What should a user be able to do with your database? </br>
 In the database, a user should be able to : </br>
 1. Add, update and delete customers, shops, employees, positions, brands, products, inventories, orders and items
 2. Search for specific customers by first name and last name
@@ -43,7 +40,6 @@ In the database, a user should be able to : </br>
 8. Manage active inventories, such as adding a new product to the shop or restock an existing product
 9. Generate invoices based on orders and items generated inside the order
 
-* What's beyond the scope of what a user should be able to do with your database? </br>
 In the database, a user should not be able to : </br>
 1. Inserting duplicate customer data, where database can check the identity no of newly created customer
 2. Inserting duplicate employee data, where database can check the identity no of newly created employee
@@ -120,8 +116,8 @@ In the database, a user should not be able to : </br>
 6. "number" : represents order number where the type is INTEGER. The value of order number must be unique to identify the order and it must be filled, which makes UNIQUE and NOT NULL constraint applied.
 7. "type" : specifies the type of the order where the data type is TEXT, we need to have the value of either 'online' or 'offline' using CHECK constraint and the value must be filled, which makes NOT NULL constraint reasonable.
 8. "status" : specifies the status of the order where the data type is TEXT and we need to have the value of : </br>
-a. if the type is 'online', then we have CHECK constraints where the accepted values are : 'pending confirmation', 'confirmed', 'packing', 'shipped', 'delivered', 'cancelled'</br>
-b. if the type is 'offline', then we have CHECK constraints where the accepted value is only 'purchased'</br>
+&ensp;a. if the type is 'online', then we have CHECK constraints where the accepted values are : 'pending confirmation', 'confirmed', 'packing', 'shipped', 'delivered', 'cancelled'</br>
+&ensp;b. if the type is 'offline', then we have CHECK constraints where the accepted value is only 'purchased'</br>
 
 <u>Items:</u>
 1. "id" : specifies the id of an item, where the type is INTEGER and the constraint is PRIMARY KEY since the value must be unique and AUTOINCREMENT to make the id to continue on increasing even when the item has been deleted from the table
@@ -140,31 +136,31 @@ The entity relationship diagram shows the relationships between entities in my d
 1. employees => positions : </br>
 a. 1 employee holds 1 position, while 1 position is held by at least 1 employee </br>
 b. this type of relationship specifies one-to-many relationship </br>
-2. employees => shops :
+2. employees => shops : </br>
 a. 1 employee works in 1 shop, while 1 shop is worked by at least 1 employee </br>
 b. this type of relationship specifies one-to-many relationship </br>
-3. shops => orders : 
+3. shops => orders : </br>
 a. 1 shop has 0 to many orders, while 1 order is linked to 1 shop </br>
 b. this type of relationship specifies one-to-many relationship </br>
-4. shops => inventories : 
+4. shops => inventories : </br> 
 a. 1 shop has 0 to many inventories, while 1 inventory is linked to 1 shop </br>
 b. this type of relationship specifies one-to-many relationship </br>
-5. employees => orders : 
+5. employees => orders : </br>
 a. 1 employee creates 0 to many orders, while 1 order is created by 1 employee </br>
 b. this type of relationship specifies one-to-many relationship </br>
-6. customers => orders : 
+6. customers => orders : </br>
 a. 1 customer has 0 to many orders, but 1 order is linked to 1 customer </br>
 b. this type of relationship specifies one-to-many relationship </br>
-7. orders => items : 
+7. orders => items : </br>
 a. 1 order purchases 1 to many items, but 1 item is being purchased by only 1 order </br>
 b. this type of relationship specifies one-to-many relationship </br>
-8. items => inventories : 
+8. items => inventories : </br> 
 a. 1 item associates with 1 inventory and 1 inventory is associated with 1 item </br>
 b. this type of relationship specifies one-to-one relationship </br>
-9. products => inventories : 
+9. products => inventories : </br>
 a. 1 product has 0 to many inventories, while 1 inventory is linked to 1 product </br>
 b. this type of relationship specifies one-to-many relationship </br>
-10. brands => products :
+10. brands => products : </br>
 a. 1 brand makes 1 to more than 1 products, while 1 product is made by 1 brand </br>
 b. this type of relationship specifies one-to-many relationship
 
@@ -172,33 +168,33 @@ b. this type of relationship specifies one-to-many relationship
 
 Indexes :
 
-1. customer_full_name_index
+1. customer_full_name_index : </br>
 This index is used for speed up searching on customers where we need to search by first_name and last_name
-2. customer_last_name_index
+2. customer_last_name_index : </br>
 This index is used for handling a query where we try to find invoices by customer based on first_name or last_name as OR condition needs to find the column one by one instead of finding all the columns simultaneously that is achiveable by using AND condition. Therefore the use of regular index is more effective compared to using composite index.
-3. shops_status_index
+3. shops_status_index : </br>
 This index is used for speed up search on shops table, specifically to search the view active_shops where status = 'active' as we cannot create index directly on views and need to create on the underlying table.
-4. shop_name_index
+4. shop_name_index : </br>
 This index is used for speed up search on shops table where we try to search shops by name.
-5. employee_name_index
+5. employee_name_index : </br>
 This index is used for speed up search on employees table where we try to search employees by first_name and last_name respectively. We are using composite index as we don't have OR condition as well as we are searching by employee first name and last name simultaneously.
-6. employee_shop_index
+6. employee_shop_index : </br>
 This index is used for speed up search on employees table where we try to get employees by using shop_id column
-7. employee_join_date_index
+7. employee_join_date_index : </br>
 This index is used for speed up search on employees table where we try to get employees by using join_date column.
-8. product_price_index
+8. product_price_index : </br>
 We used it to speed up search on products table by price.
-9. product_brand_index
+9. product_brand_index : </br>
 We used the index to speed up search on products table by brand_id. We are not using the index of name in the brands table as SQLite uses autoindex when the column is either has PRIMARY KEY / UNIQUE constraint.
-10. inventory_index
+10. inventory_index : </br>
 We used the index to speed up search on inventories table by stock as we are searching from the view active_inventory_details where we need to check if the stock is more than 0.
-11. order_shop_index
+11. order_shop_index : </br>
 We used the index to speed up search on orders table by using shop_id column, where we need to use it to search from invoices view. Specifically, we need to search the instance by name attribute from shops table, which makes indexing from JOIN statement to be useful.
-12. order_employee_index
+12. order_employee_index : </br>
 We used the index to speed up search on orders table by using employee_id column, where it is useful for searching through the employee.
-13. order_customer_index
+13. order_customer_index : </br>
 We used the index to speed up search on customers table by using customer_id column, where it is useful for searching through the customer.
-14. item_order_index
+14. item_order_index : </br>
 We used the index to speed up search on items table by using order_id. Specifically, we are using the index to quickly search the contents of the orders table in the invoices view, which makes using INDEX on JOIN statement useful when it comes to search for contents from another table.
 
 <u>Views</u>
@@ -220,12 +216,12 @@ The reason for creating active_inventory_details is to look at which products th
 
 5. invoices: </br>
 We need to create invoices as a view to look at the order details of a purchase in the shoe outlet for few reasons: </br>
-a. to look at the trends of best selling brands or product </br>
-b. to look at which customer shops the most in each store </br>
-c. to look at which shop has the most / least customers </br>
-d. as a proof of customer that purchases the item in the shop
+&ensp;a. to look at the trends of best selling brands or product </br>
+&ensp;b. to look at which customer shops the most in each store </br>
+&ensp;c. to look at which shop has the most / least customers </br>
+&ensp;d. as a proof of customer that purchases the item in the shop
 
-6. maximum_order_id:
+6. maximum_order_id: </br>
 The reason for installing view maximum_order_id is when we try to create order for receipt 
 and at the same time we need to purchase shoe(s) into the items table that is in the same order.
 
@@ -260,13 +256,13 @@ This trigger is to prevent on inserting an item from the inventories if the stoc
 
 10. insert_item:
 After inserting an item into the items table, we need to: </br>
-a. Set the quantity based on 2 conditions: </br>
-i. If quantity on items exceed stock from the selected inventories table: set the selected quantity based on stock from the inventories table </br>
-ii. If quantity on items does not exceed stock from the selected inventories table: set the selected quantity from items </br>
-b. Subtracts the stock in the inventories table by the quantity of selected instance from items table and using inventory_id to find the selected inventory. </br>
-c. Update the total price in the items table by : </br>
-i. multiply price from the selected product_id times </br>
-ii. the quantity of item based on id.
+&ensp;a. Set the quantity based on 2 conditions: </br>
+&ensp;&ensp;&ensp;i. If quantity on items exceed stock from the selected inventories table: set the selected quantity based on stock from the inventories table </br>
+&ensp;ii. If quantity on items does not exceed stock from the selected inventories table: set the selected quantity from items </br>
+&ensp;&ensp;&ensp;b. Subtracts the stock in the inventories table by the quantity of selected instance from items table and using inventory_id to find the selected inventory. </br>
+&ensp;c. Update the total price in the items table by : </br>
+&ensp;&ensp;&ensp;i. multiply price from the selected product_id times </br>
+&ensp;&ensp;&ensp;ii. the quantity of item based on id.
 
 11. insert_item_when_inventory_not_in_shop: </br>
 This trigger is to prevent on inserting an item when selected shop_id from orders is not the same as selected shop_id from inventories. In other words, we cannot purchase an item that is not found in the shop that we currently ordered.

@@ -252,7 +252,7 @@ This trigger is to prevent on inserting an order when the selected employee_id i
 9. insert_empty_stock_item: </br>
 This trigger is to prevent on inserting an item from the inventories if the stock from the item is 0 based on the selected inventory_id.
 
-10. insert_item:
+10. insert_item: </br>
 After inserting an item into the items table, we need to: </br>
 &ensp;a. Set the quantity based on 2 conditions: </br>
 &ensp;&ensp;&ensp;i. If quantity on items exceed stock from the selected inventories table: set the selected quantity based on stock from the inventories table </br>
@@ -262,13 +262,13 @@ After inserting an item into the items table, we need to: </br>
 &ensp;&ensp;&ensp;i. multiply price from the selected product_id times </br>
 &ensp;&ensp;&ensp;ii. the quantity of item based on id.
 
-11. insert_item_when_inventory_not_in_shop: </br>
+11. `insert_item_when_inventory_not_in_shop`: </br>
 This trigger is to prevent on inserting an item when selected shop_id from orders is not the same as selected shop_id from inventories. In other words, we cannot purchase an item that is not found in the shop that we currently ordered.
 
-12. insert_inventory_when_shop_not_active: </br>
+12. `insert_inventory_when_shop_not_active`: </br>
 This trigger is to prevent on inserting an inventory into inactive shop by by checking if the status from the shop table based on selected shop_id is not 'active'.
 
-13. insert_inventory_when_exists: </br>
+13. `insert_inventory_when_exists`: </br>
 This trigger is to update the stock of inventory if the product_id, shop_id as well as the size of the instance in inventories that we want to insert actually exists in the database.
 
 ## Limitations

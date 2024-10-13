@@ -114,8 +114,8 @@ In the database, a user should not be able to : </br>
 6. `"number"` : represents order number where the type is `INTEGER`. The value of order number must be unique to identify the order and it must be filled, which makes `UNIQUE` and `NOT NULL` constraint applied.
 7. `"type"` : specifies the type of the order where the data type is `TEXT`, we need to have the value of either `'online'` or `'offline'` using `CHECK` constraint and the value must be filled, which makes `NOT NULL` constraint reasonable.
 8. `"status"` : specifies the status of the order where the data type is `TEXT` and we need to have the value of : </br>
-&ensp;a. if the type is `'online'`, then we have `CHECK` constraints where the accepted values are : `'pending confirmation'`, `'confirmed'`, `'packing'`, `'shipped'`, `'delivered'`, `'cancelled'`.</br>
-&ensp;b. if the type is `'offline'`, then we have `CHECK` constraints where the accepted value is only `'purchased'`</br>
+&ensp;&ensp;&ensp;a. if the type is `'online'`, then we have `CHECK` constraints where the accepted values are : `'pending confirmation'`, `'confirmed'`, `'packing'`, `'shipped'`, `'delivered'`, `'cancelled'`.</br>
+&ensp;&ensp;&ensp;b. if the type is `'offline'`, then we have `CHECK` constraints where the accepted value is only `'purchased'`</br>
 
 <ins>Items:</ins>
 1. `"id"` : specifies the id of an item, where the type is `INTEGER` and the constraint is `PRIMARY KEY` since the value must be unique and `AUTOINCREMENT` to make the id to continue on increasing even when the item has been deleted from the table
@@ -206,18 +206,18 @@ b. to look at job title for each employee
 
 3. `active_shops`: </br>
 We create view `active_shops` to : </br>
-&ensp;a. look at which shops in an outlet that is currently open </br>
-&ensp;b. to determine whether or not we need to add employee into the shop
+&ensp;&ensp;&ensp;a. look at which shops in an outlet that is currently open </br>
+&ensp;&ensp;&ensp;b. to determine whether or not we need to add employee into the shop
 
 4. `active_inventory_details`: </br>
 The reason for creating `active_inventory_details` is to look at which products that are currently in stock, as well as which shops that sell that product.
 
 5. `invoices`: </br>
 We need to create `invoices` as a view to look at the order details of a purchase in the shoe outlet for few reasons: </br>
-&ensp;a. to look at the trends of best selling brands or product </br>
-&ensp;b. to look at which customer shops the most in each store </br>
-&ensp;c. to look at which shop has the most / least customers </br>
-&ensp;d. as a proof of customer that purchases the item in the shop
+&ensp;&ensp;&ensp;a. to look at the trends of best selling brands or product </br>
+&ensp;&ensp;&ensp;b. to look at which customer shops the most in each store </br>
+&ensp;&ensp;&ensp;c. to look at which shop has the most / least customers </br>
+&ensp;&ensp;&ensp;d. as a proof of customer that purchases the item in the shop
 
 6. `maximum_order_id`: </br>
 The reason for installing view `maximum_order_id` is when we try to create order for receipt 
@@ -254,13 +254,13 @@ This trigger is to prevent on inserting an item from the inventories if the `sto
 
 10. `insert_item`: </br>
 After inserting an item into the `items` table, we need to: </br>
-&ensp;a. Set the `quantity` based on 2 conditions: </br>
-&ensp;&ensp;&ensp;i. If `quantity` on `items` exceed stock from the selected `inventories` table: set the selected quantity based on stock from the `inventories` table </br>
-&ensp;&ensp;&ensp;ii. If `quantity` on `items` does not exceed stock from the selected `inventories` table: set the selected quantity from `items` </br>
-&ensp;b. Subtracts the stock in the `inventories` table by the quantity of selected instance from `items` table and using `inventory_id` to find the selected inventory. </br>
-&ensp;c. Update the `total_price` in the `items` table by : </br>
-&ensp;&ensp;&ensp;i. multiply `price` from the selected `product_id` times </br>
-&ensp;&ensp;&ensp;ii. the `quantity` of item based on `id`.
+&ensp;&ensp;&ensp;a. Set the `quantity` based on 2 conditions: </br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;i. If `quantity` on `items` exceed stock from the selected `inventories` table: set the selected quantity based on stock from the `inventories` table </br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;ii. If `quantity` on `items` does not exceed stock from the selected `inventories` table: set the selected quantity from `items` </br>
+&ensp;&ensp;&ensp;b. Subtracts the stock in the `inventories` table by the quantity of selected instance from `items` table and using `inventory_id` to find the selected inventory. </br>
+&ensp;&ensp;&ensp;c. Update the `total_price` in the `items` table by : </br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;i. multiply `price` from the selected `product_id` times </br>
+&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;ii. the `quantity` of item based on `id`.
 
 11. `insert_item_when_inventory_not_in_shop`: </br>
 This trigger is to prevent on inserting an item when selected `shop_id` from `orders` is not the same as selected `shop_id` from `inventories`. In other words, we cannot purchase an item that is not found in the shop that we currently ordered.

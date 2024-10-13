@@ -57,7 +57,7 @@ In the database, a user should not be able to : </br>
 3. `"first_name"` : specifies the first name of a customer, where the type is `TEXT` and we need to fill the name as we have `NOT NULL` constraint 
 4. `"last_name"` : specifies the last name of a customer, where the type is `TEXT` and we don't have `NOT NULL` constraint as some names only have the first name
 5. `"address"` : specifies the address of a customer where we accept strings in a form of `TEXT` and we need to input the value as the field has `NOT NULL` constraint 
-6. `"phone_number"` : specifies the phone number of a customer, where we can accept value like + sign that makes the field to have `TEXT` type
+6. `"phone_number"` : specifies the phone number of a customer, where we can accept value like `+` sign that makes the field to have `TEXT` type
 7. `"email"` : specifies the email of a customer, where we have `TEXT` type and check for valid email through `CHECK` constraint using `'%_@_%._%'`
 8. `"deleted"` : specifies the deleted customer status, where boolean in SQLite can only accept integer of 0 - 1, which makes the type of `INTEGER`. Also, we have `CHECK` constraint if the value is either 0 or 1 and `DEFAULT` value of 0.
 
@@ -65,7 +65,7 @@ In the database, a user should not be able to : </br>
 1. `"id"` : specifies the id of a shop, where the type is `INTEGER` and the constraint is `PRIMARY KEY` since the value must be unique and `AUTOINCREMENT` to make the `id` to continue on increasing even when the shop has been deleted from the table
 2. `"name"` : specifies the name of a shop, where the type is `TEXT` and we need to fill out the value by `NOT NULL` constraint
 3. `"address"` : specifies the address of a shop, where we accept `TEXT` data type and has `NOT NULL` constraint as it is required field
-4. `"phone_number"` : specifies the phone number of a shop, where we accept the `TEXT` data type since we can accept values like + sign
+4. `"phone_number"` : specifies the phone number of a shop, where we accept the `TEXT` data type since we can accept values like `+` sign
 5. `"email"` : specifies the email of a shops, where we have `TEXT` type and check for valid email through `CHECK` constraint using `'%_@_%._%'`
 6. `"status"` : specifies the status of a shop where the value accepts `TEXT` data type and we only accept `'active'`, `'on renovation'`, `'closed'` value through `CHECK` constraint
 
